@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>貯金進捗トラッカー</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="card">
+    <h1>貯金の進捗</h1>
+
+    <div class="field">
+      <label for="goal-amount">目標額（円）</label>
+      <input type="number" id="goal-amount" min="0" step="1" placeholder="例: 100000">
+    </div>
+
+    <div class="field">
+      <label for="current-amount">現在の貯金額（円）</label>
+      <input type="number" id="current-amount" min="0" step="1" placeholder="例: 70000">
+    </div>
+
+    <div class="result">
+      <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%;"></div>
+      </div>
+      <div class="result-row">
+        <span class="result-label">差額</span>
+        <span id="difference" class="result-value">-</span>
+      </div>
+      <div class="result-row">
+        <span class="result-label">達成率</span>
+        <span id="achievement-rate" class="result-value">-</span>
+      </div>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
