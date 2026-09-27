@@ -29,8 +29,23 @@
     </div>
 
     <div class="result">
-      <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-        <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%;"></div>
+      <div class="mug-container" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <svg class="mug-svg" viewBox="0 0 100 160" aria-hidden="true">
+          <defs>
+            <clipPath id="mug-body-clip">
+              <path d="M19,15 H81 a4,4 0 0 1 4,4 L76,133 a12,12 0 0 1 -12,12 H36 a12,12 0 0 1 -12,-12 L15,19 a4,4 0 0 1 4,-4 Z" />
+            </clipPath>
+            <linearGradient id="beer-gradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#f6c34c" />
+              <stop offset="100%" stop-color="#c9821f" />
+            </linearGradient>
+          </defs>
+          <g clip-path="url(#mug-body-clip)">
+            <rect id="mug-fill" class="mug-fill" x="10" y="145" width="80" height="0"></rect>
+            <rect id="mug-foam" class="mug-foam" x="10" y="145" width="80" height="0"></rect>
+          </g>
+          <path class="mug-outline" d="M19,15 H81 a4,4 0 0 1 4,4 L76,133 a12,12 0 0 1 -12,12 H36 a12,12 0 0 1 -12,-12 L15,19 a4,4 0 0 1 4,-4 Z" />
+        </svg>
       </div>
       <div class="result-row">
         <span class="result-label">差額</span>

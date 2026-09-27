@@ -5,8 +5,14 @@ const goalInput = document.getElementById("goal-amount");
 const currentInput = document.getElementById("current-amount");
 const differenceEl = document.getElementById("difference");
 const achievementRateEl = document.getElementById("achievement-rate");
-const progressBarEl = document.querySelector(".progress-bar");
-const progressBarFillEl = document.getElementById("progress-bar-fill");
+const mugContainerEl = document.querySelector(".mug-container");
+const mugFillEl = document.getElementById("mug-fill");
+const mugFoamEl = document.getElementById("mug-foam");
+
+const MUG_TOP = 15;
+const MUG_BOTTOM = 145;
+const MUG_HEIGHT = MUG_BOTTOM - MUG_TOP;
+const MUG_FOAM_HEIGHT = 16;
 const previousDiffEl = document.getElementById("previous-diff");
 const diffInput = document.getElementById("diff-amount");
 const diffPreviewEl = document.getElementById("diff-preview");
@@ -107,8 +113,17 @@ function saveDiff() {
 
 function setProgressBar(rate) {
   const clampedRate = Math.min(100, Math.max(0, rate));
-  progressBarFillEl.style.width = `${clampedRate}%`;
-  progressBarEl.setAttribute("aria-valuenow", Math.round(clampedRate));
+
+  const fillHeight = (clampedRate / 100) * MUG_HEIGHT;
+  const fillY = MUG_BOTTOM - fillHeight;
+  mugFillEl.setAttribute("y", fillY);
+  mugFillEl.setAttribute("height", fillHeight);
+
+  const foamHeight = Math.min(MUG_FOAM_HEIGHT, fillHeight);
+  mugFoamEl.setAttribute("y", fillY);
+  mugFoamEl.setAttribute("height", foamHeight);
+
+  mugContainerEl.setAttribute("aria-valuenow", Math.round(clampedRate));
 }
 
 function save() {
