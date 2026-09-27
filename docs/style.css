@@ -66,6 +66,33 @@ h1 {
   color: #b5533c;
 }
 
+.diff-preview {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: #6e6e73;
+  min-height: 16px;
+}
+
+.save-button {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  background: #5b8a9a;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.save-button:disabled {
+  background: #d2d2d7;
+  color: #8e8e93;
+  cursor: default;
+}
+
 .result {
   margin-top: 24px;
   padding-top: 20px;

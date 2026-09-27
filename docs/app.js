@@ -8,6 +8,9 @@ const achievementRateEl = document.getElementById("achievement-rate");
 const progressBarEl = document.querySelector(".progress-bar");
 const progressBarFillEl = document.getElementById("progress-bar-fill");
 const previousDiffEl = document.getElementById("previous-diff");
+const diffInput = document.getElementById("diff-amount");
+const diffPreviewEl = document.getElementById("diff-preview");
+const diffSaveButton = document.getElementById("diff-save-button");
 
 let previousCurrentAmount = null;
 
@@ -65,6 +68,43 @@ function renderPreviousDiff(current) {
   }
 }
 
+function updateDiffPreview() {
+  const baseline = Number(currentInput.value);
+
+  if (!diffInput.value || currentInput.value === "" || Number.isNaN(baseline)) {
+    diffPreviewEl.textContent = diffInput.value ? "先に現在の貯金額を入力してください" : "";
+    diffSaveButton.disabled = true;
+    return;
+  }
+
+  const diff = Number(diffInput.value);
+  if (Number.isNaN(diff)) {
+    diffPreviewEl.textContent = "";
+    diffSaveButton.disabled = true;
+    return;
+  }
+
+  const newTotal = baseline + diff;
+  diffPreviewEl.textContent = `→ 新しい合計金額: ${formatYen(newTotal)}`;
+  diffSaveButton.disabled = false;
+}
+
+function saveDiff() {
+  const baseline = Number(currentInput.value);
+  const diff = Number(diffInput.value);
+  if (currentInput.value === "" || Number.isNaN(baseline) || diffInput.value === "" || Number.isNaN(diff)) {
+    return;
+  }
+
+  currentInput.value = String(baseline + diff);
+  save();
+  render();
+
+  diffInput.value = "";
+  diffPreviewEl.textContent = "";
+  diffSaveButton.disabled = true;
+}
+
 function setProgressBar(rate) {
   const clampedRate = Math.min(100, Math.max(0, rate));
   progressBarFillEl.style.width = `${clampedRate}%`;
@@ -91,7 +131,10 @@ goalInput.addEventListener("input", () => {
 currentInput.addEventListener("input", () => {
   save();
   render();
+  updateDiffPreview();
 });
+diffInput.addEventListener("input", updateDiffPreview);
+diffSaveButton.addEventListener("click", saveDiff);
 
 load();
 render();

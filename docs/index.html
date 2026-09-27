@@ -21,6 +21,13 @@
       <p id="previous-diff" class="previous-diff"></p>
     </div>
 
+    <div class="field">
+      <label for="diff-amount">増減額を入力（円）</label>
+      <input type="number" id="diff-amount" step="1" placeholder="例: 5000 や -3000">
+      <p id="diff-preview" class="diff-preview"></p>
+      <button type="button" id="diff-save-button" class="save-button" disabled>この内容で保存</button>
+    </div>
+
     <div class="result">
       <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
         <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%;"></div>
