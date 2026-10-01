@@ -52,6 +52,16 @@ h1 {
   border-color: #0071e3;
 }
 
+.field-error {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: #b5533c;
+}
+
+.field-error:empty {
+  display: none;
+}
+
 .previous-diff {
   margin: 6px 0 0;
   font-size: 13px;

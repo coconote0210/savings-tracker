@@ -17,6 +17,8 @@ const previousDiffEl = document.getElementById("previous-diff");
 const diffInput = document.getElementById("diff-amount");
 const diffPreviewEl = document.getElementById("diff-preview");
 const diffSaveButton = document.getElementById("diff-save-button");
+const goalAmountErrorEl = document.getElementById("goal-amount-error");
+const currentAmountErrorEl = document.getElementById("current-amount-error");
 
 let previousCurrentAmount = null;
 
@@ -24,22 +26,37 @@ function formatYen(amount) {
   return `${amount.toLocaleString("ja-JP")}円`;
 }
 
-function render() {
-  const goal = Number(goalInput.value);
-  const current = Number(currentInput.value);
-
-  if (!currentInput.value || Number.isNaN(current)) {
-    renderPreviousDiff(null);
-  } else {
-    renderPreviousDiff(current);
+function validateAmount(value) {
+  if (value === "") {
+    return { valid: true, amount: null };
   }
 
-  if (!goalInput.value || !currentInput.value || Number.isNaN(goal) || Number.isNaN(current)) {
+  const amount = Number(value);
+  if (Number.isNaN(amount) || !Number.isInteger(amount) || amount < 0) {
+    return { valid: false, amount: null };
+  }
+
+  return { valid: true, amount };
+}
+
+function render() {
+  const goalCheck = validateAmount(goalInput.value);
+  const currentCheck = validateAmount(currentInput.value);
+
+  goalAmountErrorEl.textContent = goalCheck.valid ? "" : "0円以上の整数で入力してください";
+  currentAmountErrorEl.textContent = currentCheck.valid ? "" : "0円以上の整数で入力してください";
+
+  renderPreviousDiff(currentCheck.valid ? currentCheck.amount : null);
+
+  if (goalCheck.amount === null || currentCheck.amount === null) {
     differenceEl.textContent = "-";
     achievementRateEl.textContent = "-";
     setProgressBar(0);
     return;
   }
+
+  const goal = goalCheck.amount;
+  const current = currentCheck.amount;
 
   differenceEl.textContent = formatYen(goal - current);
 
@@ -74,35 +91,43 @@ function renderPreviousDiff(current) {
   }
 }
 
-function updateDiffPreview() {
-  const baseline = Number(currentInput.value);
+function getDiffPlan() {
+  const currentCheck = validateAmount(currentInput.value);
 
-  if (!diffInput.value || currentInput.value === "" || Number.isNaN(baseline)) {
-    diffPreviewEl.textContent = diffInput.value ? "先に現在の貯金額を入力してください" : "";
-    diffSaveButton.disabled = true;
-    return;
+  if (!diffInput.value) {
+    return { message: "", disabled: true };
+  }
+
+  if (currentCheck.amount === null) {
+    return { message: "先に現在の貯金額を入力してください", disabled: true };
   }
 
   const diff = Number(diffInput.value);
-  if (Number.isNaN(diff)) {
-    diffPreviewEl.textContent = "";
-    diffSaveButton.disabled = true;
-    return;
+  if (Number.isNaN(diff) || !Number.isInteger(diff)) {
+    return { message: "整数で入力してください", disabled: true };
   }
 
-  const newTotal = baseline + diff;
-  diffPreviewEl.textContent = `→ 新しい合計金額: ${formatYen(newTotal)}`;
-  diffSaveButton.disabled = false;
+  const newTotal = currentCheck.amount + diff;
+  if (newTotal < 0) {
+    return { message: "合計金額が0円未満になるため保存できません", disabled: true };
+  }
+
+  return { message: `→ 新しい合計金額: ${formatYen(newTotal)}`, disabled: false, newTotal };
+}
+
+function updateDiffPreview() {
+  const plan = getDiffPlan();
+  diffPreviewEl.textContent = plan.message;
+  diffSaveButton.disabled = plan.disabled;
 }
 
 function saveDiff() {
-  const baseline = Number(currentInput.value);
-  const diff = Number(diffInput.value);
-  if (currentInput.value === "" || Number.isNaN(baseline) || diffInput.value === "" || Number.isNaN(diff)) {
+  const plan = getDiffPlan();
+  if (plan.disabled) {
     return;
   }
 
-  currentInput.value = String(baseline + diff);
+  currentInput.value = String(plan.newTotal);
   save();
   render();
 
